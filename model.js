@@ -1,14 +1,43 @@
 var db = require("./db");
 
+var User = function (user) {
+    this.username = user.username;
+    this.password = user.password;
+};
+
 var Buku = function (buku) {
     this.judul = buku.judul;
     this.penulis = buku.penulis;
     this.baca = buku.baca ? buku.baca : 0;
 };
 
-// Memanggil semua buku
-Buku.getAll = function (result) {
-    db.query("SELECT * FROM buku", function (err, res) {
+// Registrasi User
+User.create = function (newUser, result) {
+    db.query("INSERT INTO user SET ?", newUser, function (err, res) {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+        } else {
+            result(null, res.insertId);
+        }
+    });
+};
+
+// Login User
+User.findByUsername = function (username, result) {
+    db.query("SELECT * FROM user WHERE username = ?", [username], function (err, res) {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+        } else {
+            result(null, res[0]);
+        }
+    });
+};
+
+// Memanggil semua buku berdasarkan id_user
+Buku.getAllByUserId = function (userId, result) {
+    db.query("SELECT * FROM buku WHERE id_user = ?", [userId], function (err, res) {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -18,9 +47,9 @@ Buku.getAll = function (result) {
     });
 };
 
-// Memanggil buku berdasarkan judul
-Buku.findByTitle = function (title, result) {
-    db.query("SELECT * FROM buku WHERE judul = ?", [title], function (err, res) {
+// Memanggil buku berdasarkan id_user dan judul
+Buku.findByUserIdAndTitle = function (userId, title, result) {
+    db.query("SELECT * FROM buku WHERE id_user = ? AND judul = ?", [userId, title], function (err, res) {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -68,4 +97,4 @@ Buku.remove = function (id, result) {
     });
 };
 
-module.exports = Buku;
+module.exports = { User, Buku };
