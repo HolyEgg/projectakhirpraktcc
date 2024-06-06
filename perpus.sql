@@ -10,7 +10,9 @@ CREATE TABLE user (
 
 CREATE TABLE buku (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    id_user INT,
     judul VARCHAR(255) NOT NULL,
     penulis VARCHAR(255) NOT NULL,
-    baca INT
+    baca INT,
+    FOREIGN KEY (id_user) REFERENCES user(id)
 );

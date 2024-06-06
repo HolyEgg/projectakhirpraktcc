@@ -4,7 +4,7 @@ const dbConn = mysql.createConnection({
     host : '34.128.87.32',
     user : 'root',
     password : '',
-    database : 'perpus'
+    database : ''
 });
 
 dbConn.connect(function(err) {
